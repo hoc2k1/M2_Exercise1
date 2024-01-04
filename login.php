@@ -35,8 +35,8 @@
         }
         input {
             background-color: #f9f4f4;
-            padding-right: 10px;
-            padding-left: 10px;
+            padding-right: 15px;
+            padding-left: 15px;
             padding-top: 10px;
             padding-bottom: 10px;
             margin-top: 20px;
@@ -59,7 +59,12 @@
             padding-top: 10px;
             padding-bottom: 10px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+            cursor: pointer;
+        }
+        button:active {
+            opacity: 0.9;
+            scale: 0.98;
         }
         a {
             color: #368af1;
