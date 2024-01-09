@@ -98,7 +98,7 @@
             <strong id="title">SOIOT SYSTEM</strong>
             <form method="post">
                 <input type="text" id="name" name="username" placeholder="user name" required>
-                <input type="text" id="password" name="password" placeholder="password" required>
+                <input type="password" id="password" name="password" placeholder="password" required>
                 <div id="bottom">
                     <button type="submit">LOGIN</button>
                     <a href="">or create new account</a>
