@@ -1,5 +1,5 @@
 <?php 
-namespace Model\AccountDB;
+namespace Model\Account;
 use Model\Account\Account;
 
 class AccountDB {

@@ -4,7 +4,7 @@
     include("../model/account/AccountDB.php");
     include("../model/account/Account.php");
     include("../controller/AccountController.php");
-
+    
     $accountController = new AccountController();
     if (sizeof($_POST) != 0 && $_POST['username'] && $_POST['password']) {
         $login = $accountController->validateAccount();
@@ -12,6 +12,8 @@
             echo '<script>alert("Username or Password is incorrect!")</script>';
         }
         else {
+            $username = $_POST['username'];
+            global $username;
             header("Location: Dashboard.php");
         }
     }

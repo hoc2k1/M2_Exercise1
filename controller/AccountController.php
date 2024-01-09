@@ -1,7 +1,7 @@
 <?php 
 namespace AccountController;
 
-use Model\AccountDB\AccountDB;
+use Model\Account\AccountDB;
 use Model\Database\DBConnect;
 
 class AccountController {
