@@ -1,3 +1,22 @@
+<?php 
+    use AccountController\AccountController;
+    include("../model/database/DBConnect.php");
+    include("../model/account/AccountDB.php");
+    include("../model/account/Account.php");
+    include("../controller/AccountController.php");
+
+    $accountController = new AccountController();
+    if (sizeof($_POST) != 0 && $_POST['username'] && $_POST['password']) {
+        $login = $accountController->validateAccount();
+        if (!$login) {
+            echo '<script>alert("Username or Password is incorrect!")</script>';
+        }
+        else {
+            header("Location: Dashboard.php");
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,14 +96,14 @@
     <div id="container">
         <div id="block">
             <strong id="title">SOIOT SYSTEM</strong>
-            <form>
-                <input type="text" id="name" placeholder="user name">
-                <input type="text" id="password" placeholder="password">
+            <form method="post">
+                <input type="text" id="name" name="username" placeholder="user name" required>
+                <input type="text" id="password" name="password" placeholder="password" required>
+                <div id="bottom">
+                    <button type="submit">LOGIN</button>
+                    <a href="">or create new account</a>
+                </div>
             </form>
-            <div id="bottom">
-                <button>LOGIN</button>
-                <a href="">or create new account</a>
-            </div>
         </div>
     </div>
 </body>
