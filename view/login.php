@@ -12,8 +12,9 @@
             echo '<script>alert("Username or Password is incorrect!")</script>';
         }
         else {
-            $username = $_POST['username'];
             global $username;
+            $username = $_POST['username'];
+            var_dump($username);
             header("Location: Dashboard.php");
         }
     }

@@ -1,24 +1,16 @@
 <?php
-    use DeviceController\DeviceController;
-    include("../model/database/DBConnect.php");
-    include("../controller/DeviceController.php");
-    include("../model/device/Device.php");
-    include("../model/device/DeviceDB.php");
-    $deviceController = new DeviceController();
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $result = $deviceController->addNewDevice();
-    }
-    
-    $allDevices = $deviceController->getAllDevices();
-
-    $arrayLabels = [];
-    $arrayConsumptions = [];
-    foreach ($allDevices as $key => $device) {
-        array_push($arrayConsumptions, $device->getConsumption());
-        array_push($arrayLabels, $device->getName());
-    }
-    $total = 0;
+   use LogController\LogController;
+   include("../model/database/DBConnect.php");
+   include("../controller/LogController.php");
+   include("../model/log/Log.php");
+   include("../model/log/LogDB.php");
+   $logController = new LogController();
+   $data = $logController->getListLogs();
+   $count = $logController->getCount();
+   $total = 0;
+   $numberPage = ceil($count / $GLOBALS["limit"]);
+   $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+   $keyword = isset($_GET['name']) ? $_GET['name'] : "";
 ?>
 
 <!DOCTYPE html>
@@ -27,28 +19,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Dữ liệu cho biểu đồ
-        const allLabels = <?php echo json_encode($arrayLabels);?>;
-        const arrayConsumptions = <?php echo json_encode($arrayConsumptions);?>;
-        console.log(38742, allLabels, arrayConsumptions)
-        var data = {
-            labels: allLabels,
-            datasets: [{
-                data: arrayConsumptions,
-            }]
-        };
-
-        // Tạo biểu đồ hình bánh
-        function createChart() {
-            var ctx = document.getElementById("myPieChart").getContext("2d");
-            var myPieChart = new Chart(ctx, {
-                type: "doughnut",
-                data: data
-            });
-        }
-    </script>
 
     <style>
         #container {
@@ -99,7 +69,7 @@
             align-items: center;
         }
         table {
-            margin-top: 30px;
+            margin-top: 10px;
             border-collapse: collapse;
             border-radius: 7px;
             background-color: #ffffff;
@@ -118,10 +88,7 @@
         td {
             padding: 7px 5px;
         }
-        #MAC-address-values, #IP-values, #created-date-values {
-            text-align: center;
-        }
-        #power-consumption-values, #total-value {
+        #total-value, #date {
             text-align: end;
         }
         #total-row {
@@ -131,12 +98,11 @@
             font-weight: bold;
         }
         input {
-            background-color: #f9f4f4;
+            background-color: #e9e4e4;
             padding-right: 15px;
             padding-left: 15px;
             padding-top: 10px;
             padding-bottom: 10px;
-            margin-top: 20px;
             border: none;
         }
         button {
@@ -150,51 +116,39 @@
             border-radius: 10px;
             box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
             cursor: pointer;
-            margin-top: 20px;
         }
         button:active {
             opacity: 0.9;
             scale: 0.98;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            flex: 1
-            /* align-self: center; */
-        }
-        #form {
-            border-radius: 7px;
-            padding: 20px;
-            background-color: #ffffff;
-            justify-content: center;
-            align-items: center;
-            display: flex;
-            /* flex: 1; */
-            width: 80%;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        #bottom {
-            margin: 30px 0px;
+        #top {
             display: flex;
             flex-direction: row;
             align-items: center;
+            justify-content: space-between;
             width: 80%;
-            justify-content: center;
+            margin-top: 20px;
         }
-        #chart {
+        form {
             align-items: center;
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
-            border-radius: 7px;
-            margin-right: 20px;
-            display: flex;
-            padding: 20px;
-            width: 40%;
-            flex-direction: column;
             justify-content: center;
         }
-        
+        #bottom {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .round-button {
+            margin: 0px 5px;
+            border-radius: 50%;
+            padding: 5px 10px 5px 10px;
+        }
+        #input-device-name {
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -237,59 +191,55 @@
                 ?>
             </div>
             <div id="content">
+                <div id="top">
+                    <strong>Action Logs</strong>
+                    <form>
+                        <input type="text" id="input-device-name" name="name" placeholder="name" value="<?php echo $keyword ?>"/>
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
                 <table>
                     <tr id="theader">
-                        <th>Devices</th>
-                        <th>MAC Address</th>
-                        <th>IP</th>
-                        <th>Created Date</th>
-                        <th>Power Consumption (Kw/H)</th>
+                        <th>Device ID #</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                        <th>Date</th>
                     </tr>
                     <?php
-                        foreach ($allDevices as $key => $device) {
-                            $name = $device->getName();
-                            $macAddress = $device->getMacAddress();
-                            $ip = $device->getIp();
-                            $date = $device->getDate();
-                            $consumption = $device->getConsumption();
-                            $total += $consumption;
+                        foreach ($data as $key => $item) {
+                            $id = $item->getId();
+                            $name = $item->getName();
+                            $action = $item->getAction();
+                            $date = $item->getDate();
+                            $total += $date;
                             echo "
                                 <tr>
-                                    <td id='devices-values'>$name</td>
-                                    <td id='MAC-address-values'>$macAddress</td>
-                                    <td id='IP-values'>$ip</td>
-                                    <td id='created-date-values'>$date</td>
-                                    <td id='power-consumption-values'>$consumption</td>
+                                    <td id='id'>$id</td>
+                                    <td id='name'>$name</td>
+                                    <td id='action'>$action</td>
+                                    <td id='date'>$date</td>
                                 </tr>
                             ";
                         }
                     ?>
                     <tr id='total-row'>
-                       <td class='total'>Total</td>
-                       <td class='total'></td>
-                       <td class='total'></td>
-                       <td class='total'></td>
-                       <?php 
-                       echo "<td class='total' id='total-value'>$total</td>"
-                       ?>
+                        <td class='total'>Total</td>
+                        <td class='total'></td>
+                        <td class='total'></td>
+                        <?php 
+                        echo "<td class='total' id='total-value'>$total</td>"
+                        ?>
                     </tr>
                 </table>
-                
                 <div id="bottom">
-                    <div id="chart">
-                        <strong>Power consumption</strong>
-                        <canvas id="myPieChart" width="250" height="200"></canvas>
-                        <script>createChart()</script>
-                    </div>
-                    <div id="form">
-                        <form method="post">
-                            <input type="text" id="name" name="device" placeholder="name" required>
-                            <input type="text" id="ip" name="ip" placeholder="IP" required>
-                            <div style="align-self: center;">
-                                <button type="submit">ADD DEVICE</button>
-                            </div>
-                        </form>
-                    </div>
+                    <form>
+                        <input type="hidden" name="name" value="<?php echo $keyword ?>"/>
+                        <?php for($i=1; $i<=$numberPage; $i++) {
+                            $color = ($i == $currentPage) ? "#f28e19" : "#d0d0d0";
+                            echo "<button class='round-button' style='background-color: $color;' type='submit' name='page' value=$i>$i</button>";
+                        }?>
+                    </form>
+                    
                 </div>
             </div>
         </div>
