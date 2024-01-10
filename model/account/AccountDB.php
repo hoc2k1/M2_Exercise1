@@ -7,6 +7,8 @@ class AccountDB {
     public function __construct(\PDO $connect) {
         $this->connect = $connect;
     }
+
+    // Lay toan bo tai khoan tu db
     public function getAllAccount() {
         $sql = "Select * from users";
         $stmt = $this->connect->prepare($sql);
@@ -15,6 +17,7 @@ class AccountDB {
         return $this->createAccountfromDB($result);
     }
 
+    // Tao doi tuong Account
     public function createAccountfromDB($result) {
         $accoutArray = [];
         foreach ($result as $account) {

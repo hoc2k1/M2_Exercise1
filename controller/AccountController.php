@@ -10,9 +10,13 @@ class AccountController {
         $db = new DBConnect();
         $this->accountDB = new AccountDB($db->connect());
     }
+
+    // Ham de tat ca account va tra ve array doi tuong Account
     public function getAllAccount() {
         return $this->accountDB->getAllAccount();
     }
+
+    // Ham validate thong tin khi login
     public function validateAccount() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $username = $_POST["username"];

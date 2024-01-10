@@ -10,9 +10,12 @@ class Account {
         $this->password = $password;
     }
 
+    // Lay username tai khoan
     public function getUsername() {
         return $this->usename;
     }
+    
+    // lay password tai khoan
     public function getPassword() {
         return $this->password;
     }

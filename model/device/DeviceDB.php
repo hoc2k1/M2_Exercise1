@@ -9,6 +9,8 @@ class DeviceDB {
     public function __construct(\PDO $connect) {
         $this->connect = $connect;
     }
+
+    // Lay toan bo thiet bi tu db
     public function getAllDevices() {
         $sql = "Select * from devices";
         $stmt = $this->connect->prepare($sql);
@@ -17,6 +19,7 @@ class DeviceDB {
         return $this->createDevicesfromDB($result);
     }
 
+    // Tao doi tuong Device
     public function createDevicesfromDB($result) {
         $devicesArray = [];
         foreach ($result as $device) {
@@ -25,6 +28,8 @@ class DeviceDB {
         }
         return $devicesArray;
     }
+
+    // Them 1 thiet bi moi vao DB
     public function addNewDevice($device) {
         $name = $device->getName();
         $macAddress = $device->getMacAddress();

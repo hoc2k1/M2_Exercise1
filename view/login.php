@@ -6,6 +6,8 @@
     include("../controller/AccountController.php");
     
     $accountController = new AccountController();
+
+    // Dang nhap
     if (sizeof($_POST) != 0 && $_POST['username'] && $_POST['password']) {
         $login = $accountController->validateAccount();
         if (!$login) {

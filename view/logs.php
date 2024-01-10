@@ -4,12 +4,26 @@
    include("../controller/LogController.php");
    include("../model/log/Log.php");
    include("../model/log/LogDB.php");
+
+
    $logController = new LogController();
+
+   // Lay danh sach log
    $data = $logController->getListLogs();
+
+   // Lay so luong log
    $count = $logController->getCount();
+
+   // Tong date cua 1 trang
    $total = 0;
+
+   // Tong so trang
    $numberPage = ceil($count / $GLOBALS["limit"]);
+
+   // Trang hien tai
    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+   // keyword khi search
    $keyword = isset($_GET['name']) ? $_GET['name'] : "";
 ?>
 

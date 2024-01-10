@@ -6,18 +6,26 @@
     include("../model/device/DeviceDB.php");
     $deviceController = new DeviceController();
 
+    // Them mot device
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $deviceController->addNewDevice();
     }
     
+    // Lay danh sach devices
     $allDevices = $deviceController->getAllDevices();
 
+    // Array labels trong chart
     $arrayLabels = [];
+
+    // Array data trong chart
     $arrayConsumptions = [];
+    
     foreach ($allDevices as $key => $device) {
         array_push($arrayConsumptions, $device->getConsumption());
         array_push($arrayLabels, $device->getName());
     }
+
+    // Tong power consumption
     $total = 0;
 ?>
 

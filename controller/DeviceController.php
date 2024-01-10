@@ -11,10 +11,13 @@ class DeviceController {
         $db = new DBConnect();
         $this->deviceDB = new DeviceDB($db->connect());
     }
+    
+    // Ham de tat ca devices va tra ve array doi tuong Device
     public function getAllDevices() {
         return $this->deviceDB->getAllDevices();
     }
 
+    // Ham them mot device moi
     public function addNewDevice() {
         if ($_SERVER["REQUEST_METHOD"] && $_SERVER["REQUEST_METHOD"] == "POST") {
             $name = $_POST["device"];

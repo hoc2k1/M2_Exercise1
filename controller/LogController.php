@@ -10,6 +10,8 @@ class LogController {
         $db = new DBConnect();
         $this->deviceDB = new LogDB($db->connect());
     }
+
+    // Ham de lay danh sach log va tra ve array doi tuong Log
     public function getListLogs() {
         return $this->deviceDB->getListLogs();
     }

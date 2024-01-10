@@ -8,6 +8,7 @@ class LogDB {
         $this->connect = $connect;
     }
 
+    // Tao doi tuong Log
     public function createLogsfromDB($result) {
         $logsArray = [];
         foreach ($result as $log) {
@@ -17,6 +18,7 @@ class LogDB {
         return $logsArray;
     }
 
+    // Lay danh sach logs tu DB voi cac tham so truyen vao: Keyword, limit, offset
     public function getListLogs() {
         $keyword = isset($_GET['name']) ? $_GET['name'] : '';
         global $limit;
@@ -31,6 +33,8 @@ class LogDB {
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $this->createLogsfromDB($result);
     }
+
+    // Lay so luong logs tu DB voi tham so truyen vao: Keyword (Mac dinh la so luong logs cua bang)
     public function getCount() {
         $keyword = isset($_GET['name']) ? $_GET['name'] : '';
 
